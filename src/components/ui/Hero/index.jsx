@@ -94,6 +94,7 @@ const Hero = () => {
               <a
                 className="group w-64 sm:w-auto bg-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-105 hover:scale-105 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 justify-center"
                 href="https://drive.google.com/file/d/1_xKCx-OjaLjObYR_PGV4l5Zbj43z2hBj/view?usp=sharing"
+                target="_blank"
                 download
               >
                 Download CV{" "}
