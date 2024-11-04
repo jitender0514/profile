@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import emailjs from '@emailjs/browser';
+import { toast, ToastContainer } from 'react-toastify'
 import { motion } from 'framer-motion'
 import { useSectionInView } from '../../../hooks/hooks'
 import SectionHeading from '../SectionHeading/SectionHeading'
 import { themeClassMap } from '../../../lib/data'
-
+import 'react-toastify/dist/ReactToastify.css';
 
 const Contact = () => {
     const { ref } = useSectionInView('contact')
@@ -12,13 +14,26 @@ const Contact = () => {
     const sendEmail = async (e) => {
         e.preventDefault();
         setPending(true);
-        // const response = await fetch('/api/contact', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(formData),
-        // })
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        console.log(data)
+
+        emailjs.send(import.meta.env.VITE_REACT_APP_SERVICE_ID, import.meta.env.VITE_REACT_APP_TEMPLATE_ID,
+            {message: JSON.stringify(data)},
+            {publicKey: import.meta.env.VITE_REACT_APP_PUBLIC_KEY}
+          )
+          .then(
+            () => {
+              console.log('SUCCESS!');
+              toast.success('Email sent successfully!', {theme: "colored"});
+              setPending(false);
+            },
+            (error) => {
+              console.log('FAILED...', error);
+              toast.error("Unable to send email!!", {theme: "colored"});
+              setPending(false);
+            },
+          );
       }
 
     return (
@@ -41,6 +56,7 @@ const Contact = () => {
         >
           <SectionHeading>Hit me up!</SectionHeading>
           <div className="w-[min(100%,38rem)]">
+            <ToastContainer />
             <p className={`mt-6 mb-20 `}>
               Please contact me directly at{' '}
               <a className="underline" href="mailto:jitender1405@gmail.com">
@@ -48,18 +64,18 @@ const Contact = () => {
               </a>{' '}
               or through this form.
             </p>
-    
+
             <form
               className="mt-10 flex flex-col dark:text-black"
               onSubmit={sendEmail}
             //   action={async (formData) => {
             //     const { error } = await sendEmail(formData)
-    
+
             //     if (error) {
             //       toast.error(error)
             //       return
             //     }
-    
+
             //     toast.success('Email sent successfully!')
             //   }}
             >
